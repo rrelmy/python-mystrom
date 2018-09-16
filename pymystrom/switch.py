@@ -74,6 +74,15 @@ class MyStromPlug(object):
 
         return self.consumption
 
+    def get_temperature(self):
+        """Get the temperature from the switch."""
+        try:
+            request = requests.get(
+                '{}/temp'.format(self.resource), timeout=self.timeout, headers=self.__get_request_headers())
+            return request.json()
+        except (requests.exceptions.ConnectionError, ValueError):
+            raise exceptions.MyStromConnectionError()
+
     def __get_request_headers(self):
         if self.token is None:
             return {}
